@@ -183,24 +183,6 @@
             transform: translateY(-2px);
         }
 
-        .btn-info {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            border: 1px solid var(--glass-border);
-            padding: 0.8rem;
-            font-size: 0.95rem;
-            margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-info:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
         .btn-reset {
             background: transparent;
             color: var(--text-muted);
@@ -211,6 +193,21 @@
         .btn-reset:hover {
             border-color: var(--danger);
             color: var(--danger);
+        }
+
+        /* Styling for the subtle info link */
+        .info-link {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: inline-block;
+            margin-top: 1.5rem;
+        }
+
+        .info-link:hover {
+            color: var(--cyan);
+            text-decoration: underline;
         }
 
         .log-item {
@@ -340,8 +337,11 @@
             <div class="loader" id="loader">Processing variables through hidden neural pathways...</div>
 
             <button class="btn-analyze" id="analyzeBtn" onclick="runIntelligence()">Update Probability</button>
-            <button class="btn-info" onclick="openModal()">🧠 How does "Impact" math work?</button>
             <button class="btn-reset" onclick="resetSystem()">Wipe Memory</button>
+
+            <div style="text-align: center;">
+                <a href="#" class="info-link" onclick="openModal(); return false;">How does "Impact" math work?</a>
+            </div>
         </div>
 
         <div class="glass-card" id="historyCard" style="display: none;">
@@ -355,7 +355,7 @@
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <h2 style="color: var(--cyan); margin-top: 0; font-weight: 800;">The Logic Behind Impact</h2>
             <p style="color: var(--text-main); line-height: 1.6; margin-bottom: 0.5rem;">
-                Impact isn't simple addition—it follows a <strong>Bayesian S-Curve</strong>.
+                Impact isn't simple addition—it follows a <strong>dynamic mathematical curve</strong>.
             </p>
             <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; margin-top: 0;">
                 When probability is near 50%, an Impact of +5 makes a massive jump. But as you approach 99% or 1%, the
@@ -550,7 +550,6 @@
             ctx.stroke();
 
             // Plot the current probability dot
-            // Restrict X visually so it doesn't go completely off canvas
             let displayX = currentLogOdds;
             if (displayX > 5.5) displayX = 5.5;
             if (displayX < -5.5) displayX = -5.5;
@@ -580,7 +579,7 @@
             ctx.font = '14px Inter, sans-serif';
             ctx.textAlign = 'center';
             let textY = dotY - 15;
-            if (textY < 20) textY = dotY + 25; // Flip text if too high
+            if (textY < 20) textY = dotY + 25;
             ctx.fillText('Current Prob: ' + currentProb.toFixed(1) + '%', dotX, textY);
         }
     </script>
