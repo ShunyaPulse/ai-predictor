@@ -168,7 +168,6 @@
             transform: none;
         }
 
-        /* Restored the secondary button styling */
         .btn-secondary {
             background: transparent;
             color: var(--cyan);
@@ -182,6 +181,24 @@
         .btn-secondary:hover {
             background: rgba(6, 182, 212, 0.1);
             transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-info:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
         }
 
         .btn-reset {
@@ -242,6 +259,53 @@
                 opacity: 1;
             }
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            padding: 2.5rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            font-size: 2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--danger);
+        }
+
+        canvas {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 
@@ -276,12 +340,29 @@
             <div class="loader" id="loader">Processing variables through hidden neural pathways...</div>
 
             <button class="btn-analyze" id="analyzeBtn" onclick="runIntelligence()">Update Probability</button>
+            <button class="btn-info" onclick="openModal()">🧠 How does "Impact" math work?</button>
             <button class="btn-reset" onclick="resetSystem()">Wipe Memory</button>
         </div>
 
         <div class="glass-card" id="historyCard" style="display: none;">
             <h2 style="margin-top: 0; color: var(--cyan);">Intelligence Log</h2>
             <div id="historyList"></div>
+        </div>
+    </div>
+
+    <div id="mathModal" class="modal-overlay" onclick="closeModalOutside(event)">
+        <div class="modal-content glass-card">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 style="color: var(--cyan); margin-top: 0; font-weight: 800;">The Logic Behind Impact</h2>
+            <p style="color: var(--text-main); line-height: 1.6; margin-bottom: 0.5rem;">
+                Impact isn't simple addition—it follows a <strong>Bayesian S-Curve</strong>.
+            </p>
+            <p style="color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; margin-top: 0;">
+                When probability is near 50%, an Impact of +5 makes a massive jump. But as you approach 99% or 1%, the
+                curve flattens out, meaning you need overwhelmingly strong evidence to push the needle further. The
+                glowing dot shows exactly where your current prediction sits!
+            </p>
+            <canvas id="sCurveCanvas" width="500" height="250"></canvas>
         </div>
     </div>
 
@@ -293,13 +374,13 @@
         const progressFill = document.getElementById('progressFill');
         const statusMsg = document.getElementById('statusMsg');
         const eventInput = document.getElementById('eventInput');
-        const evidenceContainer = document.getElementById('evidenceContainer'); // Added back
+        const evidenceContainer = document.getElementById('evidenceContainer');
         const analyzeBtn = document.getElementById('analyzeBtn');
         const historyCard = document.getElementById('historyCard');
         const historyList = document.getElementById('historyList');
         const loader = document.getElementById('loader');
+        const mathModal = document.getElementById('mathModal');
 
-        // RESTORED: Function to add dynamic inputs
         function addEvidenceBox() {
             const input = document.createElement('input');
             input.type = 'text';
@@ -309,7 +390,6 @@
             input.focus();
         }
 
-        // RESTORED: Function to clear extra inputs after submission
         function resetEvidenceBoxes() {
             evidenceContainer.innerHTML = '<input type="text" class="evidence-input" placeholder="e.g., A major rocket test was successful today">';
         }
@@ -317,7 +397,6 @@
         function animateValue(start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
-                // FIXED the typo that was causing issues earlier
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
                 let current = (progress * (end - start) + start);
@@ -340,8 +419,6 @@
 
         async function runIntelligence() {
             const event = eventInput.value.trim();
-
-            // Grabbing all inputs by the restored class name
             const inputs = document.querySelectorAll('.evidence-input');
             const evidenceArray = Array.from(inputs).map(inp => inp.value.trim()).filter(val => val !== "");
 
@@ -404,7 +481,6 @@
             `;
             historyList.insertAdjacentHTML('afterbegin', logHtml);
 
-            // Restored the call to clear boxes
             resetEvidenceBoxes();
         }
 
@@ -419,9 +495,93 @@
 
             statusMsg.innerText = "Memory wiped. Awaiting new variables.";
             eventInput.value = "";
-            resetEvidenceBoxes(); // Reset inputs here too
+            resetEvidenceBoxes();
             historyList.innerHTML = "";
             historyCard.style.display = "none";
+        }
+
+        /* --- Modal and Graph Logic --- */
+        function openModal() {
+            mathModal.style.display = 'flex';
+            drawSCurve();
+        }
+
+        function closeModal() {
+            mathModal.style.display = 'none';
+        }
+
+        function closeModalOutside(event) {
+            if (event.target === mathModal) {
+                closeModal();
+            }
+        }
+
+        function drawSCurve() {
+            const canvas = document.getElementById('sCurveCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw center axis lines
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            ctx.moveTo(width / 2, 0);
+            ctx.lineTo(width / 2, height);
+            ctx.moveTo(0, height / 2);
+            ctx.lineTo(width, height / 2);
+            ctx.stroke();
+
+            // Draw the S-Curve (Logistic function)
+            ctx.beginPath();
+            ctx.strokeStyle = '#06b6d4'; // Cyan
+            ctx.lineWidth = 4;
+
+            for (let x = -6; x <= 6; x += 0.1) {
+                let y = 1 / (1 + Math.exp(-x));
+                let canvasX = ((x + 6) / 12) * width;
+                let canvasY = height - (y * height);
+
+                if (x === -6) ctx.moveTo(canvasX, canvasY);
+                else ctx.lineTo(canvasX, canvasY);
+            }
+            ctx.stroke();
+
+            // Plot the current probability dot
+            // Restrict X visually so it doesn't go completely off canvas
+            let displayX = currentLogOdds;
+            if (displayX > 5.5) displayX = 5.5;
+            if (displayX < -5.5) displayX = -5.5;
+
+            let displayY = 1 / (1 + Math.exp(-displayX));
+            let dotX = ((displayX + 6) / 12) * width;
+            let dotY = height - (displayY * height);
+
+            // Glow effect for the dot
+            ctx.beginPath();
+            ctx.arc(dotX, dotY, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#8b5cf6'; // Primary Purple
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#8b5cf6';
+            ctx.fill();
+
+            // Outline for the dot
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#ffffff';
+            ctx.stroke();
+
+            // Reset shadow
+            ctx.shadowBlur = 0;
+
+            // Draw "You are here" text
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '14px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            let textY = dotY - 15;
+            if (textY < 20) textY = dotY + 25; // Flip text if too high
+            ctx.fillText('Current Prob: ' + currentProb.toFixed(1) + '%', dotX, textY);
         }
     </script>
 </body>
