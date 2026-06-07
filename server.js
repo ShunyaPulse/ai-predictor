@@ -1,6 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const path = require('path'); // Added path module to fix folder confusion
+const path = require('path');
 
 dotenv.config();
 
@@ -10,14 +10,19 @@ app.use(express.json());
 // 1. Serve static files using absolute paths
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 2. Secure API Route
+// 2. Secure API Route with Auto-Rotation
 app.post('/api/analyze', async (req, res) => {
-    const apiKey = process.env.GEMINI_API_KEY;
+    // 1. Vercel se singular naam waali string uthayiye
+    const apiKeyString = process.env.GEMINI_API_KEY;
     const { eventText, evidenceArray, currentProbability } = req.body;
 
-    if (!apiKey) {
-        return res.status(500).json({ error: "Server error: Missing API key." });
+    if (!apiKeyString) {
+        return res.status(500).json({ error: "Server error: Missing API key configuration." });
     }
+
+    // 2. Agar aapne ek se zyada keys comma laga kar daali hain, toh yeh use array mein split kar dega
+    // Agar sirf ek hi key hai, toh bhi yeh perfectly single-item array bana dega!
+    const keys = apiKeyString.split(',').map(key => key.trim());
 
     const formattedEvidence = evidenceArray.map((ev, index) => `${index + 1}. ${ev}`).join('\n');
 
@@ -30,31 +35,48 @@ app.post('/api/analyze', async (req, res) => {
         {"weight": integer from -10 to 10, "reasoning": "1-2 sentence explanation speaking to the user."}
     `;
 
-    try {
-        const googleResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { response_mime_type: "application/json" }
-            })
-        });
+    let finalAiResponseText = null;
+    let lastErrorMessage = "Unknown error";
 
-        if (!googleResponse.ok) {
-            const errorData = await googleResponse.json();
-            throw new Error(`Google API Error (${googleResponse.status}): ${errorData.error?.message || "Unknown Error"}`);
+    // 3. Loop over every key in the list
+    for (let i = 0; i < keys.length; i++) {
+        const currentKey = keys[i];
+
+        try {
+            const googleResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${currentKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { response_mime_type: "application/json" }
+                })
+            });
+
+            if (!googleResponse.ok) {
+                if (googleResponse.status === 429 || googleResponse.status === 403) {
+                    console.log(`Key ${i + 1} exhausted or rate-limited. Trying next key...`);
+                    continue;
+                }
+                const errorData = await googleResponse.json();
+                throw new Error(errorData.error?.message || `API Error ${googleResponse.status}`);
+            }
+
+            const data = await googleResponse.json();
+            let aiResponseText = data.candidates[0].content.parts[0].text;
+            finalAiResponseText = aiResponseText.replace(/```json/g, '').replace(/```/g, '').trim();
+            break;
+
+        } catch (error) {
+            console.error(`Attempt with Key ${i + 1} failed:`, error.message);
+            lastErrorMessage = error.message;
         }
-
-        const data = await googleResponse.json();
-        let aiResponseText = data.candidates[0].content.parts[0].text;
-        aiResponseText = aiResponseText.replace(/```json/g, '').replace(/```/g, '').trim();
-
-        res.json(JSON.parse(aiResponseText));
-
-    } catch (error) {
-        console.error("Backend Error:", error.message);
-        res.status(500).json({ error: `Backend details: ${error.message}` });
     }
+
+    if (!finalAiResponseText) {
+        return res.status(500).json({ error: `Backend details: All API keys exhausted or failed. Last error: ${lastErrorMessage}` });
+    }
+
+    res.json(JSON.parse(finalAiResponseText));
 });
 
 // 3. Explicitly catch the root URL and serve the HTML file securely
