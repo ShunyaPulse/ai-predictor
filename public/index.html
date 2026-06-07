@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate AI Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-darker: #020617;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.5);
+            --cyan: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top center, var(--bg-dark), var(--bg-darker));
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .app-container {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            font-weight: 900;
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--cyan), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .visualizer-section {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        .prob-number {
+            font-size: 7rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            text-shadow: 0 0 40px var(--primary-glow);
+            transition: text-shadow 0.3s ease;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 16px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(90deg, var(--danger), var(--cyan), var(--success));
+            background-size: 200% 100%;
+            border-radius: 20px;
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1), background-position 1.5s ease;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+
+        .status-message {
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            color: var(--cyan);
+            font-weight: 600;
+            height: 3rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-analyze {
+            background: linear-gradient(135deg, var(--primary), #6d28d9);
+            color: white;
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+            margin-top: 1rem;
+        }
+
+        .btn-analyze:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-analyze:disabled {
+            background: #475569;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Restored the secondary button styling */
+        .btn-secondary {
+            background: transparent;
+            color: var(--cyan);
+            border: 1px dashed var(--cyan);
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            margin-top: -0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+            margin-top: 1rem;
+        }
+
+        .btn-reset:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .log-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--cyan);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-reasoning {
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 1rem;
+            line-height: 1.6;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            color: var(--cyan);
+            font-weight: bold;
+            margin-top: 1rem;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                opacity: 0.5;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <div class="glass-card">
+            <h1>✨ AI Predictor Dashboard</h1>
+
+            <div class="visualizer-section">
+                <div class="prob-number" id="probNumber">50.0%</div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="status-message" id="statusMsg">System Initialized. Awaiting variables.</div>
+            </div>
+
+            <div>
+                <label>Target Event</label>
+                <input type="text" id="eventInput" placeholder="e.g., Will humanity reach Mars by 2030?">
+            </div>
+
+            <div>
+                <label>New Evidence / Data Point</label>
+                <div id="evidenceContainer">
+                    <input type="text" class="evidence-input"
+                        placeholder="e.g., A major rocket test was successful today">
+                </div>
+                <button class="btn-secondary" onclick="addEvidenceBox()">+ Add another data point</button>
+            </div>
+
+            <div class="loader" id="loader">Processing variables through hidden neural pathways...</div>
+
+            <button class="btn-analyze" id="analyzeBtn" onclick="runIntelligence()">Update Probability</button>
+            <button class="btn-reset" onclick="resetSystem()">Wipe Memory</button>
+        </div>
+
+        <div class="glass-card" id="historyCard" style="display: none;">
+            <h2 style="margin-top: 0; color: var(--cyan);">Intelligence Log</h2>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentLogOdds = 0;
+        let currentProb = 50.0;
+
+        const probNumber = document.getElementById('probNumber');
+        const progressFill = document.getElementById('progressFill');
+        const statusMsg = document.getElementById('statusMsg');
+        const eventInput = document.getElementById('eventInput');
+        const evidenceContainer = document.getElementById('evidenceContainer'); // Added back
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const historyCard = document.getElementById('historyCard');
+        const historyList = document.getElementById('historyList');
+        const loader = document.getElementById('loader');
+
+        // RESTORED: Function to add dynamic inputs
+        function addEvidenceBox() {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'evidence-input';
+            input.placeholder = 'Enter another piece of evidence...';
+            evidenceContainer.appendChild(input);
+            input.focus();
+        }
+
+        // RESTORED: Function to clear extra inputs after submission
+        function resetEvidenceBoxes() {
+            evidenceContainer.innerHTML = '<input type="text" class="evidence-input" placeholder="e.g., A major rocket test was successful today">';
+        }
+
+        function animateValue(start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                // FIXED the typo that was causing issues earlier
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                let current = (progress * (end - start) + start);
+                probNumber.innerText = current.toFixed(1) + "%";
+
+                if (current > 65) {
+                    probNumber.style.textShadow = "0 0 40px rgba(16, 185, 129, 0.6)";
+                } else if (current < 35) {
+                    probNumber.style.textShadow = "0 0 40px rgba(239, 68, 68, 0.6)";
+                } else {
+                    probNumber.style.textShadow = "0 0 40px rgba(6, 182, 212, 0.6)";
+                }
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        async function runIntelligence() {
+            const event = eventInput.value.trim();
+
+            // Grabbing all inputs by the restored class name
+            const inputs = document.querySelectorAll('.evidence-input');
+            const evidenceArray = Array.from(inputs).map(inp => inp.value.trim()).filter(val => val !== "");
+
+            if (!event) return alert("Please provide the Target Event.");
+            if (evidenceArray.length === 0) return alert("Please provide at least one piece of evidence.");
+
+            analyzeBtn.disabled = true;
+            loader.style.display = "block";
+
+            try {
+                const res = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        eventText: event,
+                        evidenceArray: evidenceArray,
+                        currentProbability: currentProb
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Server Connection Failed");
+
+                updateDashboard(evidenceArray, data.weight, data.reasoning);
+
+            } catch (err) {
+                alert("System Error: " + err.message);
+            } finally {
+                analyzeBtn.disabled = false;
+                loader.style.display = "none";
+            }
+        }
+
+        function updateDashboard(evidenceArray, weight, reasoning) {
+            let oldProb = currentProb;
+
+            currentLogOdds += (weight * 0.4);
+            currentProb = (1 / (1 + Math.exp(-currentLogOdds))) * 100;
+
+            animateValue(oldProb, currentProb, 1500);
+            progressFill.style.width = currentProb + "%";
+            progressFill.style.backgroundPosition = currentProb > 50 ? "100%" : "0%";
+
+            statusMsg.innerText = currentProb > 50 ? "Trajectory favors occurrence." : "Trajectory favors non-occurrence.";
+
+            historyCard.style.display = "block";
+            let evidenceHtmlList = evidenceArray.map(ev => `<li>${ev}</li>`).join('');
+
+            const logHtml = `
+                <div class="log-item" style="border-color: ${weight > 0 ? 'var(--success)' : (weight < 0 ? 'var(--danger)' : 'var(--text-muted)')}">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; color: white; margin-bottom: 0.5rem;">
+                        <span>Batch Data Processed:</span>
+                        <span>Impact: ${weight > 0 ? '+' : ''}${weight}</span>
+                    </div>
+                    <ul style="margin: 0; padding-left: 1.2rem; color: var(--text-muted); font-size: 0.95rem;">
+                        ${evidenceHtmlList}
+                    </ul>
+                    <div class="ai-reasoning">🧠 ${reasoning}</div>
+                </div>
+            `;
+            historyList.insertAdjacentHTML('afterbegin', logHtml);
+
+            // Restored the call to clear boxes
+            resetEvidenceBoxes();
+        }
+
+        function resetSystem() {
+            currentLogOdds = 0;
+            currentProb = 50.0;
+
+            animateValue(parseFloat(probNumber.innerText), 50.0, 1000);
+            progressFill.style.width = "50%";
+            progressFill.style.backgroundPosition = "50%";
+            probNumber.style.textShadow = "0 0 40px rgba(139, 92, 246, 0.5)";
+
+            statusMsg.innerText = "Memory wiped. Awaiting new variables.";
+            eventInput.value = "";
+            resetEvidenceBoxes(); // Reset inputs here too
+            historyList.innerHTML = "";
+            historyCard.style.display = "none";
+        }
+    </script>
+</body>
+
+</html>
