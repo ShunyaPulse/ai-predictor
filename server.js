@@ -1,18 +1,22 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const path = require('path'); // Added path module to fix folder confusion
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
 
+// 1. Serve static files using absolute paths
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 2. Secure API Route
 app.post('/api/analyze', async (req, res) => {
     const apiKey = process.env.GEMINI_API_KEY;
     const { eventText, evidenceArray, currentProbability } = req.body;
 
     if (!apiKey) {
-        return res.status(500).json({ error: "Server error: Missing API key in .env file." });
+        return res.status(500).json({ error: "Server error: Missing API key." });
     }
 
     const formattedEvidence = evidenceArray.map((ev, index) => `${index + 1}. ${ev}`).join('\n');
@@ -43,17 +47,19 @@ app.post('/api/analyze', async (req, res) => {
 
         const data = await googleResponse.json();
         let aiResponseText = data.candidates[0].content.parts[0].text;
-
-        // FIX 1: Clean up any weird Markdown formatting the AI might have added
         aiResponseText = aiResponseText.replace(/```json/g, '').replace(/```/g, '').trim();
 
         res.json(JSON.parse(aiResponseText));
 
     } catch (error) {
-        // FIX 2: Send the actual exact error message to the frontend so we know what's wrong
         console.error("Backend Error:", error.message);
         res.status(500).json({ error: `Backend details: ${error.message}` });
     }
+});
+
+// 3. Explicitly catch the root URL and serve the HTML file securely
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const port = process.env.PORT || 3000;
@@ -61,4 +67,5 @@ app.listen(port, () => {
     console.log(`🚀 Premium Predictor server running at http://localhost:${port}`);
 });
 
+// Export for Vercel serverless integration
 module.exports = app;
