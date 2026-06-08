@@ -1,18 +1,110 @@
-<h1>Privacy Policy</h1>
-<p>Last Updated: June 2026</p>
-<p>At Ultimate AI Predictor, your privacy is our priority. Because of the way our serverless architecture is designed,
-    we are proud to operate a zero-retention platform.</p>
+<!DOCTYPE html>
+<html lang="en">
 
-<h2>Data Collection</h2>
-<p>We do not require you to create an account, log in, or provide any personally identifiable information (PII) to use
-    our core prediction engine.</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - AI Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-darker: #020617;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #8b5cf6;
+            --cyan: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
 
-<h2>Data Processing</h2>
-<p>When you input a "Target Event" and "Evidence", that text is temporarily sent to our secure backend to be processed
-    by our AI models. Once the probability is calculated and returned to your screen, the data is immediately discarded.
-    We do not store your prompts, predictions, or session history on our databases.</p>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top center, var(--bg-dark), var(--bg-darker));
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
 
-<h2>Cookies and Tracking</h2>
-<p>We may use basic, non-intrusive analytics to understand overall site traffic and ensure our servers are running
-    smoothly. If we integrate third-party advertising (like Google AdSense), those vendors may use cookies to serve ads
-    based on your prior visits to this or other websites.</p>
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        h1 {
+            color: var(--cyan);
+            margin-top: 0;
+            font-weight: 900;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-weight: 800;
+            margin-top: 2rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        a.back-btn {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--cyan);
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px dashed var(--cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        a.back-btn:hover {
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">&larr; Back to Predictor</a>
+        <div class="glass-card">
+            <h1>Privacy Policy</h1>
+            <p>Last Updated: June 2026</p>
+            <p>At Ultimate AI Predictor, your privacy is our priority. Because of the way our serverless architecture is
+                designed, we are proud to operate a zero-retention platform.</p>
+
+            <h2>Data Collection</h2>
+            <p>We do not require you to create an account, log in, or provide any personally identifiable information
+                (PII) to use our core prediction engine.</p>
+
+            <h2>Data Processing</h2>
+            <p>When you input a "Target Event" and "Evidence", that text is temporarily sent to our secure backend to be
+                processed by our AI models. Once the probability is calculated and returned to your screen, the data is
+                immediately discarded. We do not store your prompts, predictions, or session history on our databases.
+            </p>
+
+            <h2>Cookies and Tracking</h2>
+            <p>We may use basic, non-intrusive analytics to understand overall site traffic and ensure our servers are
+                running smoothly. If we integrate third-party advertising (like Google AdSense), those vendors may use
+                cookies to serve ads based on your prior visits to this or other websites.</p>
+        </div>
+    </div>
+</body>
+
+</html>

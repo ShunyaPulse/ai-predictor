@@ -1,16 +1,107 @@
-<h1>How It Works</h1>
-<p>The Ultimate AI Predictor is designed to be highly intuitive while running complex calculations behind the scenes.
-    Here is how you can simulate future scenarios.</p>
+<!DOCTYPE html>
+<html lang="en">
 
-<h2>Step-by-Step Example</h2>
-<p><strong>1. Define the Target Event:</strong> Start by asking a clear, measurable question. For example: <em>"Will
-        humanity establish a permanent base on Mars by 2035?"</em></p>
-<p><strong>2. Provide the Evidence:</strong> Input data points one by one or in a batch. For example, you might input:
-    <em>"SpaceX successfully tested the Starship booster catch mechanism today."</em>
-</p>
-<p><strong>3. Let the Engine Calculate:</strong> The AI will analyze your evidence, assign it a logical weight (Impact),
-    and shift the probability along the S-Curve. It will also provide a 1-2 sentence justification for why the math
-    shifted.</p>
-<p><strong>4. Iterate:</strong> Add counter-evidence (e.g., <em>"Funding for space exploration was cut by 20% this
-        year"</em>) to see the probability correct itself downwards. The more data you feed it, the more accurate the
-    prediction becomes!</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - AI Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-darker: #020617;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #8b5cf6;
+            --cyan: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top center, var(--bg-dark), var(--bg-darker));
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        h1 {
+            color: var(--cyan);
+            margin-top: 0;
+            font-weight: 900;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-weight: 800;
+            margin-top: 2rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        a.back-btn {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--cyan);
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px dashed var(--cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        a.back-btn:hover {
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">&larr; Back to Predictor</a>
+        <div class="glass-card">
+            <h1>How It Works</h1>
+            <p>The Ultimate AI Predictor is designed to be highly intuitive while running complex calculations behind
+                the scenes. Here is how you can simulate future scenarios.</p>
+
+            <h2>Step-by-Step Example</h2>
+            <p><strong>1. Define the Target Event:</strong> Start by asking a clear, measurable question. For example:
+                <em>"Will humanity establish a permanent base on Mars by 2035?"</em>
+            </p>
+            <p><strong>2. Provide the Evidence:</strong> Input data points one by one or in a batch. For example, you
+                might input: <em>"SpaceX successfully tested the Starship booster catch mechanism today."</em></p>
+            <p><strong>3. Let the Engine Calculate:</strong> The AI will analyze your evidence, assign it a logical
+                weight (Impact), and shift the probability along the S-Curve. It will also provide a 1-2 sentence
+                justification for why the math shifted.</p>
+            <p><strong>4. Iterate:</strong> Add counter-evidence (e.g., <em>"Funding for space exploration was cut by
+                    20% this year"</em>) to see the probability correct itself downwards. The more data you feed it, the
+                more accurate the prediction becomes!</p>
+        </div>
+    </div>
+</body>
+
+</html>
