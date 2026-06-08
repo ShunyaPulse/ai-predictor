@@ -184,6 +184,22 @@
             transform: translateY(-2px);
         }
 
+        /* New Share Button Styles */
+        .btn-share {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px dashed var(--success);
+            margin-top: 1rem;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .btn-share:hover {
+            background: rgba(16, 185, 129, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
         .btn-reset {
             background: transparent;
             color: var(--text-muted);
@@ -196,7 +212,6 @@
             color: var(--danger);
         }
 
-        /* Styling for the subtle info link */
         .info-link {
             color: var(--text-muted);
             font-size: 0.85rem;
@@ -338,6 +353,9 @@
             <div class="loader" id="loader">Processing variables through hidden neural pathways...</div>
 
             <button class="btn-analyze" id="analyzeBtn" onclick="runIntelligence()">Update Probability</button>
+
+            <button class="btn-share" id="shareBtn" onclick="sharePrediction()">📋 Copy Results to Share</button>
+
             <button class="btn-reset" onclick="resetSystem()">Wipe Memory</button>
 
             <div style="text-align: center;">
@@ -349,6 +367,7 @@
             <h2 style="margin-top: 0; color: var(--cyan);">Intelligence Log</h2>
             <div id="historyList"></div>
         </div>
+
         <div
             style="text-align: center; margin-top: 2rem; border-top: 1px solid var(--glass-border); padding-top: 1.5rem;">
             <a href="/about.html" class="info-link" style="margin: 0 10px;">About & Math</a>
@@ -384,6 +403,7 @@
         const eventInput = document.getElementById('eventInput');
         const evidenceContainer = document.getElementById('evidenceContainer');
         const analyzeBtn = document.getElementById('analyzeBtn');
+        const shareBtn = document.getElementById('shareBtn'); // Hooking up the Share Button
         const historyCard = document.getElementById('historyCard');
         const historyList = document.getElementById('historyList');
         const loader = document.getElementById('loader');
@@ -452,6 +472,9 @@
 
                 updateDashboard(evidenceArray, data.weight, data.reasoning);
 
+                // Show the share button only after a successful analysis
+                shareBtn.style.display = 'block';
+
             } catch (err) {
                 alert("System Error: " + err.message);
             } finally {
@@ -492,6 +515,30 @@
             resetEvidenceBoxes();
         }
 
+        // New Share Functionality
+        function sharePrediction() {
+            const event = eventInput.value.trim() || "this future event";
+            const prob = probNumber.innerText;
+            const url = window.location.href;
+
+            const shareText = `✨ This AI predicts a ${prob} chance that "${event}" based on real-world evidence! Run your own scenario here: ${url}`;
+
+            navigator.clipboard.writeText(shareText).then(() => {
+                const originalText = shareBtn.innerHTML;
+                shareBtn.innerHTML = "✅ Copied to Clipboard!";
+                shareBtn.style.background = "var(--success)";
+                shareBtn.style.color = "var(--bg-dark)";
+
+                setTimeout(() => {
+                    shareBtn.innerHTML = originalText;
+                    shareBtn.style.background = "rgba(16, 185, 129, 0.1)";
+                    shareBtn.style.color = "var(--success)";
+                }, 2000);
+            }).catch(err => {
+                alert("Could not copy text. Please try again.");
+            });
+        }
+
         function resetSystem() {
             currentLogOdds = 0;
             currentProb = 50.0;
@@ -506,6 +553,7 @@
             resetEvidenceBoxes();
             historyList.innerHTML = "";
             historyCard.style.display = "none";
+            shareBtn.style.display = "none"; // Hide share button on reset
         }
 
         /* --- Modal and Graph Logic --- */
@@ -532,7 +580,6 @@
 
             ctx.clearRect(0, 0, width, height);
 
-            // Draw center axis lines
             ctx.beginPath();
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
             ctx.lineWidth = 1;
@@ -542,9 +589,8 @@
             ctx.lineTo(width, height / 2);
             ctx.stroke();
 
-            // Draw the S-Curve (Logistic function)
             ctx.beginPath();
-            ctx.strokeStyle = '#06b6d4'; // Cyan
+            ctx.strokeStyle = '#06b6d4';
             ctx.lineWidth = 4;
 
             for (let x = -6; x <= 6; x += 0.1) {
@@ -557,7 +603,6 @@
             }
             ctx.stroke();
 
-            // Plot the current probability dot
             let displayX = currentLogOdds;
             if (displayX > 5.5) displayX = 5.5;
             if (displayX < -5.5) displayX = -5.5;
@@ -566,23 +611,19 @@
             let dotX = ((displayX + 6) / 12) * width;
             let dotY = height - (displayY * height);
 
-            // Glow effect for the dot
             ctx.beginPath();
             ctx.arc(dotX, dotY, 8, 0, Math.PI * 2);
-            ctx.fillStyle = '#8b5cf6'; // Primary Purple
+            ctx.fillStyle = '#8b5cf6';
             ctx.shadowBlur = 15;
             ctx.shadowColor = '#8b5cf6';
             ctx.fill();
 
-            // Outline for the dot
             ctx.lineWidth = 2;
             ctx.strokeStyle = '#ffffff';
             ctx.stroke();
 
-            // Reset shadow
             ctx.shadowBlur = 0;
 
-            // Draw "You are here" text
             ctx.fillStyle = '#ffffff';
             ctx.font = '14px Inter, sans-serif';
             ctx.textAlign = 'center';
