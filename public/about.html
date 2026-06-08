@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & The Math - AI Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-darker: #020617;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #8b5cf6;
+            --cyan: #06b6d4;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top center, var(--bg-dark), var(--bg-darker));
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+        }
+
+        h1 {
+            color: var(--cyan);
+            margin-top: 0;
+            font-weight: 900;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-weight: 800;
+            margin-top: 2rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        a.back-btn {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--cyan);
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px dashed var(--cyan);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        a.back-btn:hover {
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">&larr; Back to Predictor</a>
+        <div class="glass-card">
+
+            <h1>About Us & The Probability Math</h1>
+            <p>Welcome to Ultimate AI Predictor. We built this platform to bring advanced statistical modeling out of
+                the laboratory and into the hands of curious minds, debaters, and future-thinkers.</p>
+
+            <h2>The Mathematics of Prediction</h2>
+            <p>Our engine does not use random guesswork. It is built upon the principles of <strong>Bayesian
+                    Inference</strong>. When you input a target event, the system initializes at a state of maximum
+                entropy (50% probability).</p>
+            <p>As you provide new evidence, our AI neural pathways evaluate the contextual weight of that data. We
+                calculate a precise "Impact Score" and map it onto a logistic S-Curve (a sigmoid function). This means
+                moving a probability from 50% to 60% requires moderate evidence, but pushing a prediction from 95% to
+                99% requires absolute, undeniable proof. This perfectly mirrors how logical certainty operates in
+                physics and the real world.</p>
+        </div>
+    </div>
+</body>
+
+</html>
