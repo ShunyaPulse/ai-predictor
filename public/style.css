@@ -188,23 +188,31 @@ button {
     box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
 }
 
-/* --- NEW SOCIAL SHARE BUTTONS CSS --- */
 .social-share-row {
     display: none;
-    /* Hidden until analysis is done */
-    gap: 10px;
-    margin-top: 1rem;
+    justify-content: center;
+    /* Center mein layega */
+    gap: 15px;
+    margin-top: 1.5rem;
 }
 
 .btn-social {
-    flex: 1;
-    padding: 1rem;
-    font-size: 0.95rem;
+    width: 45px !important;
+    /* Fixed size for round shape */
+    height: 45px !important;
+    border-radius: 50% !important;
+    /* Perfect circle banayega */
+    font-size: 1.3rem !important;
+    /* Icon ka size */
     color: white;
-    display: flex;
+    display: inline-flex !important;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    padding: 0 !important;
+    /* Purani padding hatayega */
 }
 
 .btn-wa {
@@ -400,8 +408,10 @@ canvas {
         font-size: 1rem !important;
     }
 
-    /* Make social buttons stack on small mobile screens so they don't look squished */
+    /* Mobile par bhi icons ko ek line (row) mein rakhega */
     .social-share-row {
-        flex-direction: column;
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 15px !important;
     }
 }

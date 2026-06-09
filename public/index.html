@@ -12,6 +12,10 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
         crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 </head>
 
@@ -50,9 +54,15 @@
             <button class="btn-share" id="shareBtn" onclick="sharePrediction()">📋 Copy Results to Share</button>
 
             <div class="social-share-row" id="socialShareRow">
-                <button class="btn-social btn-wa" onclick="shareWhatsApp()">WhatsApp</button>
-                <button class="btn-social btn-fb" onclick="shareFacebook()">Facebook</button>
-                <button class="btn-social btn-ig" onclick="shareInstagram()">Instagram</button>
+                <button class="btn-social btn-wa" onclick="shareWhatsApp()" title="Share on WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+                <button class="btn-social btn-fb" onclick="shareFacebook()" title="Share on Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button class="btn-social btn-ig" onclick="shareInstagram()" title="Share on Instagram">
+                    <i class="fab fa-instagram"></i>
+                </button>
             </div>
 
             <button class="btn-reset" onclick="resetSystem()">Wipe Memory</button>
