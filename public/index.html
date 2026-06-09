@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate AI Predictor</title>
+
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2537057702197590"
@@ -188,14 +189,12 @@
             transform: translateY(-2px);
         }
 
-        /* New Share Button Styles */
         .btn-share {
             background: rgba(16, 185, 129, 0.1);
             color: var(--success);
             border: 1px dashed var(--success);
             margin-top: 1rem;
             display: none;
-            /* Hidden by default */
         }
 
         .btn-share:hover {
@@ -323,6 +322,53 @@
             border: 1px solid var(--glass-border);
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
+
+        /* --- MOBILE RESPONSIVE FIX (Bulletproof) --- */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px !important;
+            }
+
+            .app-container {
+                gap: 1rem !important;
+            }
+
+            .glass-card {
+                padding: 20px !important;
+                border-radius: 16px !important;
+            }
+
+            h1 {
+                font-size: 2rem !important;
+            }
+
+            .visualizer-section {
+                padding: 1.5rem 0 !important;
+            }
+
+            .prob-number {
+                font-size: 4.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .status-message {
+                font-size: 1rem !important;
+                height: auto !important;
+                margin-bottom: 1rem !important;
+            }
+
+            input[type="text"] {
+                font-size: 1rem !important;
+                padding: 0.8rem !important;
+            }
+
+            .btn-analyze,
+            .btn-share,
+            .btn-reset {
+                padding: 1rem !important;
+                font-size: 1rem !important;
+            }
+        }
     </style>
 </head>
 
@@ -407,7 +453,7 @@
         const eventInput = document.getElementById('eventInput');
         const evidenceContainer = document.getElementById('evidenceContainer');
         const analyzeBtn = document.getElementById('analyzeBtn');
-        const shareBtn = document.getElementById('shareBtn'); // Hooking up the Share Button
+        const shareBtn = document.getElementById('shareBtn');
         const historyCard = document.getElementById('historyCard');
         const historyList = document.getElementById('historyList');
         const loader = document.getElementById('loader');
@@ -475,8 +521,6 @@
                 if (!res.ok) throw new Error(data.error || "Server Connection Failed");
 
                 updateDashboard(evidenceArray, data.weight, data.reasoning);
-
-                // Show the share button only after a successful analysis
                 shareBtn.style.display = 'block';
 
             } catch (err) {
@@ -515,11 +559,10 @@
                 </div>
             `;
             historyList.insertAdjacentHTML('afterbegin', logHtml);
-
             resetEvidenceBoxes();
         }
 
-        // New Share Functionality
+        // Pure Clipboard Share Function
         function sharePrediction() {
             const event = eventInput.value.trim() || "this future event";
             const prob = probNumber.innerText;
@@ -557,7 +600,7 @@
             resetEvidenceBoxes();
             historyList.innerHTML = "";
             historyCard.style.display = "none";
-            shareBtn.style.display = "none"; // Hide share button on reset
+            shareBtn.style.display = "none";
         }
 
         /* --- Modal and Graph Logic --- */
