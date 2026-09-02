@@ -61,7 +61,7 @@ Local preview server (e.g., VS Code Live Server)
 
 Local Setup
 1. Clone the repository:
-2. git clone [https://github.com/your-username/ai-predictor.git](https://github.com/your-username/ai-predictor.git)
+2. git clone [https://github.com/ShunyaPulse/ai-predictor.git](https://github.com/ShunyaPulse/ai-predictor.git)
 cd ai-predictor
 
 2. Run Locally:
