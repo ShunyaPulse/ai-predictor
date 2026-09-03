@@ -43,17 +43,6 @@ Styling: Custom Glassmorphic CSS Variables, Font Awesome Icons HTML +1
 Visualization: Native HTML5 Canvas API.
 Deployment: Vercel
 
-Project Structure
-ai-predictor/
-├── public/
-│   ├── index.html       # Primary prediction dashboard
-│   ├── style.css        # Responsive glassmorphism styling
-│   ├── script.js        # Core DOM logic, canvas math, and share routines
-│   ├── about.html       # Documentation on statistical models
-│   ├── how-it-works.html# Operational guide
-│   ├── privacy.html     # Privacy Policy
-│   └── terms.html       # Terms of Service
-└── README.md
 Getting Started
 Prerequisites
 A modern web browser (Chrome, Firefox, Safari, or Edge)
